@@ -16,14 +16,13 @@ class TaskController extends Controller
     public function task_store(Request $request){
 
         $validator = Validator::make($request->all(), [
-            'task_title' => 'required',
-            'task_deadline' => 'required',
-            'task_description' => 'required',
-            'task_pdf' => 'required',
+            'title' => 'required',
+            'deadline' => 'required',
+            'description' => 'required',
+            'file' => 'required',
         ]);
 
         if ($validator->fails()){
-            $errors = $validator->errors();
             return response()->json(['res'=>'Input field blank!']);
         }
 
