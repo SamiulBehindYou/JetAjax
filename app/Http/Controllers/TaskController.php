@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Task;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -10,7 +11,8 @@ use Illuminate\Support\Facades\Validator;
 class TaskController extends Controller
 {
     public function task(){
-        return view('task.index');
+        $users = User::where('role', 0)->get();
+        return view('task.index', compact('users'));
     }
 
     public function task_store(Request $request){
@@ -19,6 +21,7 @@ class TaskController extends Controller
             'title' => 'required',
             'deadline' => 'required',
             'description' => 'required',
+            'assign' => 'required',
             'file' => 'required',
         ]);
 
@@ -26,22 +29,27 @@ class TaskController extends Controller
             return response()->json(['res'=>'Input field blank!']);
         }
 
-
         $file = $request->file('file');
+
+        if($file->getClientOriginalExtension() != 'pdf'){
+            return response()->json(['res'=>'Only PDF accepted!']);
+        }
+
+
         $file_name = uniqid().'.'.$file->getClientOriginalExtension();
-        Task::create([
+        $create = Task::create([
             'task_title' => $request->title,
             'task_deadline' => $request->deadline,
             'task_description' => $request->description,
             'task_pdf' => $file_name,
-            'task_assignee' => Auth::user()->id,
+            'task_assignee' => $request->assign,
         ]);
 
         $file->storeAs('pdf', $file_name, 'public');
-        // $file->move(public_path('pdf') . $file_name);
 
-
-        return response()->json(['res'=>'Task Created Successfully!']);
+        return response()->json([
+            'res'=>'Task Created Successfully!',
+    ]);
     }
 
     public function gettask(){
