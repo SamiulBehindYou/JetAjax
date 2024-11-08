@@ -6,6 +6,7 @@ use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class TaskController extends Controller
@@ -45,7 +46,14 @@ class TaskController extends Controller
             'task_assignee' => $request->assign,
         ]);
 
-        $file->storeAs('pdf', $file_name, 'public');
+        // $file->move(public_path('pdf/') . $file_name);
+
+        // $file->storeAs('pdf', $file_name, 'public');
+        $file = file_get_contents($file);
+        Storage::disk('public')->put($file_name, $file);
+
+
+
 
         return response()->json([
             'res'=>'Task Created Successfully!',

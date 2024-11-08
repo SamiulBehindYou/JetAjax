@@ -26,7 +26,7 @@
             </div>
             <div class="card-body">
                 {{-- <strong class="text-success" id="success"></strong> --}}
-                <form id="TaskForm">
+                <form id="TaskForm" enctype="multipart/form-data">
                     @csrf
                     <div class="row">
                         <div class="col">
