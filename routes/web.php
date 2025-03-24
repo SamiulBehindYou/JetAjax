@@ -25,3 +25,9 @@ Route::get('make-done/{id}', [TaskController::class, 'make_done'])->name('makedo
 Route::get('accept/{id}', [TaskController::class, 'accept'])->name('accept');
 Route::get('reject/{id}', [TaskController::class, 'reject'])->name('reject');
 Route::get('delete-task/{id}', [TaskController::class, 'deltetask'])->name('deltetask');
+
+
+
+Route::get('post', function(){
+    return view('post');
+})->name('post');
